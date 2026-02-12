@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Photo Frame</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🖼️</text></svg>">
+</head>
+<body>
+
+    <!-- Loading Screen -->
+    <div id="screen-loading" class="screen">
+        <div class="screen-center">
+            <div class="heart-icon">&hearts;</div>
+            <p>Loading...</p>
+        </div>
+    </div>
+
+    <!-- Auth Screen (Login / Sign Up) -->
+    <div id="screen-auth" class="screen hidden">
+        <div class="screen-center">
+            <div class="heart-icon">&hearts;</div>
+            <h1>Photo Frame</h1>
+            <p class="subtitle">Synced photo frames with live reactions</p>
+
+            <div class="tabs">
+                <button class="tab active" data-tab="login">Log In</button>
+                <button class="tab" data-tab="signup">Sign Up</button>
+            </div>
+
+            <form id="auth-form">
+                <input type="email" id="auth-email" placeholder="Email" required autocomplete="email">
+                <input type="password" id="auth-password" placeholder="Password" required autocomplete="current-password">
+                <button type="submit" id="auth-submit" class="btn-primary">Log In</button>
+            </form>
+
+            <div id="auth-message" class="message-box hidden"></div>
+        </div>
+    </div>
+
+    <!-- Pair Setup Screen -->
+    <div id="screen-pair" class="screen hidden">
+        <div class="screen-center">
+            <h1>Set Up Your Pair</h1>
+            <p class="subtitle">Connect two photo frames together</p>
+
+            <div class="pair-options">
+                <div class="pair-option">
+                    <h3>Create New Pair</h3>
+                    <p>Generate a code to share with the other device</p>
+                    <div id="pair-create-section">
+                        <label for="create-display-name">Your display name</label>
+                        <input type="text" id="create-display-name" placeholder="e.g. Device A" maxlength="50">
+                        <button id="btn-create-pair" class="btn-primary">Create Pair</button>
+                    </div>
+                    <div id="pair-code-display" class="hidden">
+                        <p>Your pair code:</p>
+                        <div class="pair-code" id="generated-code"></div>
+                        <p class="hint">Share this code with the other device owner</p>
+                        <button id="btn-go-dashboard" class="btn-primary" style="margin-top:12px">Continue to Dashboard</button>
+                    </div>
+                </div>
+
+                <div class="divider">&mdash; or &mdash;</div>
+
+                <div class="pair-option">
+                    <h3>Join Existing Pair</h3>
+                    <p>Enter the code from the other device</p>
+                    <label for="join-code">Pair code</label>
+                    <input type="text" id="join-code" placeholder="e.g. FX7K2M" maxlength="8" style="text-transform:uppercase">
+                    <label for="join-display-name">Your display name</label>
+                    <input type="text" id="join-display-name" placeholder="e.g. Device B" maxlength="50">
+                    <button id="btn-join-pair" class="btn-primary">Join Pair</button>
+                </div>
+            </div>
+
+            <div id="pair-message" class="message-box hidden"></div>
+            <button id="btn-logout-pair" class="btn-text">Log out</button>
+        </div>
+    </div>
+
+    <!-- Dashboard Screen -->
+    <div id="screen-dashboard" class="screen hidden">
+        <header>
+            <div class="header-left">
+                <span class="heart-icon-sm">&hearts;</span>
+                <span>Photo Frame</span>
+            </div>
+            <div class="header-right">
+                <span class="pair-badge" id="dash-pair-code"></span>
+                <button id="btn-logout" class="btn-icon" title="Log out">&#x23FB;</button>
+            </div>
+        </header>
+
+        <main>
+            <!-- Photo Section -->
+            <section class="card" id="photo-section">
+                <div class="card-header">
+                    <h2>Photos</h2>
+                    <label class="btn-sm" id="btn-upload">
+                        + Upload
+                        <input type="file" id="file-input" accept="image/*,.heic,.heif" multiple hidden>
+                    </label>
+                </div>
+
+                <div id="photo-gallery" class="gallery">
+                    <div class="gallery-empty" id="gallery-empty">
+                        <p>No photos yet</p>
+                        <p class="hint">Upload photos to display on your frames</p>
+                    </div>
+                </div>
+
+                <div id="upload-progress" class="hidden">
+                    <div class="progress-bar"><div class="progress-fill" id="progress-fill"></div></div>
+                    <p id="upload-status">Uploading...</p>
+                </div>
+
+                <!-- Photo Navigation -->
+                <div class="photo-nav" id="photo-nav">
+                    <button id="btn-prev" class="btn-nav">&#9664;</button>
+                    <span id="photo-counter">0 / 0</span>
+                    <button id="btn-next" class="btn-nav">&#9654;</button>
+                </div>
+            </section>
+
+            <!-- Message Section -->
+            <section class="card">
+                <h2>Send Message</h2>
+                <div class="message-input">
+                    <input type="text" id="message-text" placeholder="Type a message..." maxlength="50">
+                    <button id="btn-send-message" class="btn-primary btn-send">Send</button>
+                </div>
+            </section>
+
+            <!-- Emoji Section -->
+            <section class="card">
+                <h2>Send Reaction</h2>
+                <div class="emoji-buttons">
+                    <button class="emoji-btn" data-emoji="heart" title="Red Heart">&#10084;&#65039;</button>
+                    <button class="emoji-btn" data-emoji="pink_heart" title="Pink Heart">&#128151;</button>
+                    <button class="emoji-btn" data-emoji="sparkle_heart" title="Sparkle Heart">&#128150;</button>
+                    <button class="emoji-btn" data-emoji="stars" title="Stars">&#10024;</button>
+                </div>
+                <p class="hint">Tap to send &mdash; appears on both frames!</p>
+            </section>
+
+            <!-- Activity Feed -->
+            <section class="card">
+                <h2>Recent Activity</h2>
+                <div id="activity-feed" class="activity-feed">
+                    <p class="hint" id="activity-empty">No recent activity</p>
+                </div>
+            </section>
+        </main>
+
+        <div id="toast" class="toast hidden"></div>
+    </div>
+
+    <!-- Photo Lightbox -->
+    <div id="lightbox" class="lightbox hidden">
+        <div class="lightbox-content">
+            <img id="lightbox-img" src="" alt="Photo preview">
+            <div class="lightbox-actions">
+                <button id="btn-lightbox-close" class="btn-primary">Close</button>
+                <button id="btn-lightbox-delete" class="btn-danger">Delete</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://cdn.jsdelivr.net/npm/heic-to@1/dist/iife/heic-to.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>

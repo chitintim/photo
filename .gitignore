@@ -1,0 +1,27 @@
+# Secrets & config
+config.h
+credentials.md
+
+# Local development files
+firmware/
+supabase/
+test-sketches/
+PROJECT_PLAN.md
+SETUP_GUIDE.md
+.mcp.json
+
+# Build artifacts
+build/
+.pio/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+*.swp
+*.swo
+
+# Claude
+.claude/
